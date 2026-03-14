@@ -16,6 +16,16 @@ A Discord bot for RuneQuest.
 (it appears in the result embed).
 
 
+### Resistance table
+
+```
+/rq resist <active> <passive> [label]
+```
+
+`active` and `passive` are integer characteristics.
+The effective skill is `50 + (active - passive) * 5`.
+
+
 ## Hosting setup
 
 Specify `DISCORD_TOKEN` in `.env`, then:
