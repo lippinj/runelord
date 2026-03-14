@@ -5,7 +5,7 @@ from .command import Command
 from .. import render
 
 
-class CheckCommand(Command):
+class AugmentCommand(Command):
     def __init__(self, ctx: discord.ApplicationContext):
         super().__init__(ctx)
         self.ability = None
@@ -24,7 +24,7 @@ class CheckCommand(Command):
     def run(self):
         roll, result = self.ability.check()
         desc = ""
-        desc += f"**{render.result_str(result)}:**"
+        desc += f"**{result.augment_value:+d}%:**"
         desc += f" {self.ctx.user.name} rolled **{render.roll_str(roll)}**"
         desc += f" against {self.ability.render()}"
         if self.label:

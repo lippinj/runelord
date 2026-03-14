@@ -11,6 +11,16 @@ class AbilityCheckResult(Enum):
     SPECIAL = 2
     CRITICAL = 3
 
+    @property
+    def augment_value(self):
+        return {
+            self.FUMBLE: -50,
+            self.FAILURE: -20,
+            self.SUCCESS: +20,
+            self.SPECIAL: +30,
+            self.CRITICAL: +50,
+        }[self]
+
 
 class AbilityCheckThresholds(NamedTuple):
     """Result thresholds."""

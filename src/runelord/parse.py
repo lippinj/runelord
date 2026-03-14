@@ -20,10 +20,14 @@ class ParsedAbilityScore:
 
     @property
     def is_literal(self):
+        if self.error:
+            return False
         ast = self.roll.ast.children
         return len(ast) == 1 and type(ast[0]) == d20.diceast.Literal
 
     def render(self):
+        if self.error:
+            return self.raw
         if self.is_literal:
             return str(self.score)
         else:
