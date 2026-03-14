@@ -8,8 +8,8 @@ from .commands.resist_command import ResistCommand
 def create_bot() -> discord.Bot:
     bot = discord.Bot()
 
-    guild_ids = [1482131624547193113]
-    rq = bot.create_group("rq", "Runelord commands", guild_ids=guild_ids)
+    guild_ids = []
+    rq = bot.create_group("rq", "Runelord commands")
 
     @rq.command(description="Roll an ordinary ability check.")
     @discord.option("ability", type=str, description="Ability score")
