@@ -2,6 +2,8 @@ import functools
 
 import discord
 
+from ..error import UnexpectedError
+
 
 class Command:
     """Base class for bot commands."""
@@ -29,7 +31,7 @@ class Command:
     async def respond(self):
         """Send the error or response to Discord."""
         if self.error:
-            await self.ctx.respond(f"Error: {self.error}")
+            await self.ctx.respond(**self.error.make_response(self.ctx))
         else:
             await self.ctx.respond(**self.response)
 
@@ -38,5 +40,5 @@ class Command:
         try:
             self.run()
         except Exception as e:
-            self.error = f"Unexpected error: {e}"
+            self.error = UnexpectedError(e)
         await self.respond()

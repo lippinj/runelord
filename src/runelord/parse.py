@@ -1,3 +1,4 @@
+from .error import Error
 from .rq import AbilityScore
 
 import d20
@@ -10,12 +11,12 @@ class ParsedAbilityScore:
 
     def parse(self):
         if "d" in self.raw:
-            return ParsedAbilityScore.ErrDiceRoll()
+            return self.ErrorDiceInFormula(self.raw)
         try:
             self.roll = d20.roll(self.raw)
             self.ability = AbilityScore(self.roll.total)
         except d20.RollSyntaxError as e:
-            return ParsedAbilityScore.ErrSyntax(e)
+            return self.ErrorBadFormula(self.raw, e)
         return None
 
     @property
@@ -41,10 +42,35 @@ class ParsedAbilityScore:
     def check(self, roll=None):
         return self.ability.check(roll)
 
-    @staticmethod
-    def ErrDiceRoll():
-        return "Ability score cannot contain a dice roll."
 
-    @staticmethod
-    def ErrSyntax(e: d20.RollSyntaxError):
-        return f"Syntax error in ability score formula: {e}"
+    class ErrorDiceInFormula(Error):
+        def __init__(self, expression: str):
+            self.expression = expression
+
+        def make_description(self, ctx):
+            desc = ""
+            desc += f"Not a valid ability score:\n"
+            desc += f"> {self.expression}\n"
+            desc += "The ability score cannot contain dice rolls."
+            return desc
+
+
+    class ErrorBadFormula(Error):
+        def __init__(self, expression:str, e: d20.RollSyntaxError):
+            self.expression = expression
+            self.e = e
+
+        def make_description(self, ctx):
+            desc = ""
+            desc += f"Not a valid ability score:\n"
+            desc += f"> {self.expression}\n"
+            desc += f"Must be a number or formula."
+            return desc
+
+        def make_embed(self, ctx):
+            embed = super().make_embed(ctx)
+            embed.add_field(name="Example (number)", value="`60`", inline=True)
+            embed.add_field(name="Example (formula)", value="`45 + 20`", inline=True)
+            embed.add_field(name="Example (formula)", value="`50/2 + 15`", inline=True)
+            embed.set_footer(text=f"Parse error: {self.e}")
+            return embed
