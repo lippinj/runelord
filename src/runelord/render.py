@@ -24,5 +24,6 @@ def result_color(result: AbilityCheckResult) -> discord.Color:
 
 def roll_str(roll: int) -> str:
     if roll == 100:
+        # RuneQuest convention for snake eyes
         return "00"
     return str(roll)
