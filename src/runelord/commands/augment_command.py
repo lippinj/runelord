@@ -11,17 +11,14 @@ class AugmentCommand(Command):
         self.ability = None
         self.label = None
 
-    @Command.skip_on_error
     def arg_ability(self, s: str):
         self.ability = ParsedAbilityScore(s)
-        self.error = self.ability.error
+        self.maybe_add_error(self.ability.error)
 
-    @Command.skip_on_error
     def arg_label(self, s: str):
         self.label = s
 
-    @Command.skip_on_error
-    def run(self):
+    def run(self) -> dict:
         roll, result = self.ability.check()
         desc = ""
         desc += f"**{result.augment_value:+d}%:**"
@@ -32,4 +29,4 @@ class AugmentCommand(Command):
         desc += "."
         color = render.result_color(result)
         embed = discord.Embed(description=desc, color=color)
-        self.response["embed"] = embed
+        return {"embed": embed}

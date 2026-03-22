@@ -2,6 +2,7 @@ from .error import Error
 from .rq import AbilityScore
 
 import d20
+import discord
 
 
 class ParsedAbilityScore:
@@ -47,7 +48,7 @@ class ParsedAbilityScore:
         def __init__(self, expression: str):
             self.expression = expression
 
-        def make_description(self, ctx):
+        def make_md(self):
             desc = ""
             desc += f"Not a valid ability score:\n"
             desc += f"> {self.expression}\n"
@@ -60,17 +61,15 @@ class ParsedAbilityScore:
             self.expression = expression
             self.e = e
 
-        def make_description(self, ctx):
+        def make_md(self):
             desc = ""
             desc += f"Not a valid ability score:\n"
             desc += f"> {self.expression}\n"
             desc += f"Must be a number or formula."
             return desc
 
-        def make_embed(self, ctx):
-            embed = super().make_embed(ctx)
+        def populate_embed(self, embed: discord.Embed):
             embed.add_field(name="Example (number)", value="`60`", inline=True)
             embed.add_field(name="Example (formula)", value="`45 + 20`", inline=True)
             embed.add_field(name="Example (formula)", value="`50/2 + 15`", inline=True)
             embed.set_footer(text=f"Parse error: {self.e}")
-            return embed

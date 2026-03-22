@@ -17,7 +17,7 @@ def create_bot() -> discord.Bot:
         cmd = CheckCommand(ctx)
         cmd.arg_ability(ability)
         cmd.arg_label(label)
-        await cmd.run_respond()
+        await cmd.run_and_respond(ctx)
 
     @rq.command(description="Roll an augment check.")
     @discord.option("ability", type=str, description="Ability score")
@@ -26,7 +26,7 @@ def create_bot() -> discord.Bot:
         cmd = AugmentCommand(ctx)
         cmd.arg_ability(ability)
         cmd.arg_label(label)
-        await cmd.run_respond()
+        await cmd.run_and_respond(ctx)
 
     @rq.command(description="Roll a check on the resistance table.")
     @discord.option("active", type=int, description="Active characteristic")
@@ -39,6 +39,6 @@ def create_bot() -> discord.Bot:
         cmd.arg_active(active)
         cmd.arg_passive(passive)
         cmd.arg_label(label)
-        await cmd.run_respond()
+        await cmd.run_and_respond(ctx)
 
     return bot

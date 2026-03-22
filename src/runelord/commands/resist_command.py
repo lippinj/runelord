@@ -12,20 +12,16 @@ class ResistCommand(Command):
         self.passive = None
         self.label = None
 
-    @Command.skip_on_error
     def arg_active(self, value: int):
         self.active = value
 
-    @Command.skip_on_error
     def arg_passive(self, value: int):
         self.passive = value
 
-    @Command.skip_on_error
     def arg_label(self, s: str):
         self.label = s
 
-    @Command.skip_on_error
-    def run(self):
+    def run(self) -> dict:
         effective = 50 + (self.active - self.passive) * 5
         ability = AbilityScore(effective)
         roll, result = ability.check()
@@ -38,4 +34,5 @@ class ResistCommand(Command):
             desc += f": _{self.label}_"
         desc += "."
         color = render.result_color(result)
-        self.response["embed"] = discord.Embed(description=desc, color=color)
+        embed = discord.Embed(description=desc, color=color)
+        return {"embed": embed}
